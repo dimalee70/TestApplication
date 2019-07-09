@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+apply from: "$project.rootDir/tools/findbugs.gradle"
+apply from: "$project.rootDir/tools/checkstyle.gradle"
+apply from: "$project.rootDir/tools/pmd.gradle"
+
+android {
+    compileSdkVersion versions.compile_sdk
+
+    dataBinding {
+        enabled true
+    }
+    defaultConfig {
+        applicationId "www.i.testapplication"
+        minSdkVersion versions.min_sdk
+        targetSdkVersion versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    flavorDimensions "default"
+    productFlavors {
+        prod {
+            dimension "default"
+            applicationId = "www.i.testapplication"
+        }
+        dev {
+            dimension "default"
+            applicationId = "www.i.testapplication.dev"
+        }
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+        }
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        incremental true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude '.readme'
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+}
+
+apply from: 'dependencies.gradle'
